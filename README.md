@@ -1,7 +1,7 @@
 # 可莉 Loon 插件中心 · 全量源码归档
 
 **来源**：[hub.kelee.one](https://hub.kelee.one)（作者 可莉🅥）  
-**归档时间**：2026-11-12 00:45  
+**归档时间**：2026-11-12 00:50  
 **规模**：275 个插件 · 102 个远程脚本/资源
 
 ## 这是什么
@@ -372,10 +372,23 @@ https://raw.githubusercontent.com/Yjwj205/loon-kelee-archive/main/plugins/<文�
 - 引用脚本的插件：**86**
 - 归档资源：**102** 个，12.6 MB
 
+## 定制版（custom/）
+
+`plugins/` 是纯净归档，本地改动一律放 `custom/`，重新抓取上游也不会覆盖。
+
+
+### Block_HTTPDNS.lpx
+
+- 改动：放行微信 HTTPDNS：移除 dns.weixin.qq.com / dns.weixin.qq.com.cn 拦截，流量按现有分流策略处理
+- 移除规则：`DOMAIN, dns.weixin.qq.com, REJECT`
+- 移除规则：`DOMAIN, dns.weixin.qq.com.cn, REJECT`
+- 安装：`https://raw.githubusercontent.com/Yjwj205/loon-kelee-archive/main/custom/Block_HTTPDNS.lpx`
+
+
 ## 刷新
 
 ```bash
-cd tools && python3 fetch.py && python3 fetch_res.py && python3 rewrite.py && python3 build_index.py
+cd tools && python3 fetch.py && python3 fetch_res.py && python3 rewrite.py && python3 build_index.py && python3 local_patch.py
 ```
 
 ## 说明

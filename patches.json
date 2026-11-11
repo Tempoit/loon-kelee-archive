@@ -1,0 +1,9 @@
+{
+ "Block_HTTPDNS.lpx": {
+  "note": "放行微信 HTTPDNS：移除 dns.weixin.qq.com / dns.weixin.qq.com.cn 拦截，流量按现有分流策略处理",
+  "remove": [
+   "DOMAIN, dns.weixin.qq.com, REJECT",
+   "DOMAIN, dns.weixin.qq.com.cn, REJECT"
+  ]
+ }
+}
