@@ -1,0 +1,32 @@
+#!name=Telegram重定向(修正版)
+#!desc=多 Telegram 客户端共存时，把 t.me 公开/私有链接按指定客户端打开。修正官方原版只匹配「纯主页」和「/+邀请」两种形态的缺口，并增加 Nagram 专属 scheme（na）。
+#!author=可莉🅥(原版) / Tempoit(修正)
+#!tag=重定向
+#!system=
+#!system_version=
+#!loon_version=3.5.1(998)
+#!homepage=https://github.com/Tempoit/loon-kelee-archive
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/Telegram.png
+#!date=2026-11-12 09:00:00
+
+[Argument]
+app=select, "na", "tg", "sg", "turrit", "ime", "lingo", "ng", tag=客户端, desc=指定跳转的客户端（Nagram=na，官方=tg，其它按各自 scheme）
+
+[Rewrite]
+# 1) 私有邀请链接：t.me/+hash 与旧版 t.me/joinchat/hash
+request if ${url} ~= /^https?:\/\/(?:t|telegram)\.me\/(?:\+|joinchat\/)([A-Za-z0-9_-]+)\/?(?:\?.*)?$/i as m then redirect(307, "${app}://join?invite=${m.1}")
+
+# 2) 私有消息深链：t.me/c/<channel>/<msg>
+request if ${url} ~= /^https?:\/\/(?:t|telegram)\.me\/c\/(\d+)\/(\d+)\/?(?:\?.*)?$/i as m then redirect(307, "${app}://privatepost?channel=${m.1}&post=${m.2}")
+
+# 3) 网页预览：t.me/s/<name> 以及 t.me/s/<name>/<msg>
+request if ${url} ~= /^https?:\/\/(?:t|telegram)\.me\/s\/([A-Za-z][A-Za-z0-9_]{3,31})(?:\/(\d+))?\/?(?:\?.*)?$/i as m then redirect(307, "${app}://resolve?domain=${m.1}")
+
+# 4) 单条消息深链：t.me/<name>/<msg>（含 ?single 等参数，参数一律丢弃）
+request if ${url} ~= /^https?:\/\/(?:t|telegram)\.me\/([A-Za-z][A-Za-z0-9_]{3,31})\/(\d+)\/?(?:\?.*)?$/i as m then redirect(307, "${app}://resolve?domain=${m.1}&post=${m.2}")
+
+# 5) 频道/群组/用户主页：t.me/<name>（含 ?start= 等参数，参数一律丢弃）
+request if ${url} ~= /^https?:\/\/(?:t|telegram)\.me\/([A-Za-z][A-Za-z0-9_]{3,31})\/?(?:\?.*)?$/i as m then redirect(307, "${app}://resolve?domain=${m.1}")
+
+[MitM]
+hostname = t.me, telegram.me, telegram.dog
